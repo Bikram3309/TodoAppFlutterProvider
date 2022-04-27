@@ -11,18 +11,40 @@ class HomePage extends StatelessWidget {
     final allTodos = Provider.of<TodoModel>(context);
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 100,
+        leading: ElevatedButton.icon(
+            onPressed: null,
+            icon: Icon(Icons.countertops),
+            label: Text("Total = ${allTodos.items.length}")),
         title: const Text("Todo App "),
+        centerTitle: true,
         actions: [
           ElevatedButton.icon(
               onPressed: () {
-                allTodos.clearTodo();
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Are You Sure?"),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              allTodos.clearTodo();
+                              Navigator.pop(context);
+                            },
+                            child: Text("Confirm")),
+                        OutlinedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text("Cancel"))
+                      ],
+                    );
+                  },
+                );
               },
               icon: Icon(Icons.delete),
               label: Text("Clear")),
-          ElevatedButton.icon(
-              onPressed: null,
-              icon: Icon(Icons.countertops),
-              label: Text("Total = ${allTodos.items.length}")),
         ],
       ),
       body: allTodos.items.length == 0
@@ -71,7 +93,9 @@ class HomePage extends StatelessWidget {
                           size: 20.0,
                           color: Colors.brown[900],
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          
+                        },
                       ),
                       IconButton(
                         icon: Icon(
@@ -81,32 +105,34 @@ class HomePage extends StatelessWidget {
                         ),
                         onPressed: () {
                           showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text("Do you want to  delete?"),
-                                  actions: [
-                                    ElevatedButton(
-                                        onPressed: () {
-                                          allTodos.deleteTodo(i);
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Confirm Delete")),
-                                    OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text("Cancel"))
-                                  ],
-                                );
-                              });
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text("Are You Sure?"),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        allTodos.deleteTodo(i);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Confirm")),
+                                  OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Cancel"))
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                     ],
                   ),
                 );
               }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
@@ -123,17 +149,25 @@ showAlertDialog(BuildContext context) {
   // Create AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text("Add Todo"),
-    content: Column(
-      children: [
-        TextField(
-          controller: cTitle,
-          decoration: InputDecoration(labelText: "Title"),
-        ),
-        TextField(
-          controller: cDesc,
-          decoration: InputDecoration(labelText: "Description"),
-        ),
-      ],
+    content: Container(
+      width: double.maxFinite,
+      height: 200,
+      child: Column(
+        children: [
+          TextField(
+            keyboardType: TextInputType.name,
+            maxLines: null,
+            controller: cTitle,
+            decoration: InputDecoration(labelText: "Title"),
+          ),
+          TextField(
+            keyboardType: TextInputType.name,
+            maxLines: null,
+            controller: cDesc,
+            decoration: InputDecoration(labelText: "Description"),
+          ),
+        ],
+      ),
     ),
     actions: [
       ElevatedButton(
